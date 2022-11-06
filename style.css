@@ -1,0 +1,37 @@
+body {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  height: 90vh;
+}
+
+.boxes {
+  display: grid;
+  grid-template-rows: 1fr 2fr 2fr 2fr;
+  width: 80%;
+}
+
+.box1 {
+  display: flex;
+  background-color: black;
+  justify-content: center;
+  align-items: center;
+}
+
+.box2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.box3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.box {
+  border: 1px solid black;
+}
+
+#title {
+  color: white;
+}
