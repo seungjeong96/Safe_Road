@@ -22,7 +22,7 @@ app.engine("html", require("ejs").renderFile);
 
 // html 파일 렌더링
 app.get("/", (req, res) => {
-  res.render("index.html");
+  res.sendFile(__dirname + "/views/index.html");
 });
 
 // 웹소켓 설정
@@ -43,12 +43,21 @@ socketWatch4.on("connection", (socket) => {
   console.log(`watch4 웹 소켓 연결됨`);
   socket.on("hrate", (msg) => {
     console.log(msg);
+    webpage.emit("hrate", msg);
     // 로직 구현
   });
 
+  const webpage = io.of("/webpage");
+  webpage.on("connect", (socket) => {
+    console.log("웹페이지 웹소켓 연결됨");
+  });
+
+  /* 가속도
   socket.on("acc", (msg) => {
     console.log(msg);
   });
+  */
+
   socket.on("disconnect", () => {
     console.log("watch4 웹 소켓 연결 끊김");
   });

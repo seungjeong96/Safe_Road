@@ -7,7 +7,7 @@ body {
 
 .boxes {
   display: grid;
-  grid-template-rows: 1fr 2fr 2fr 2fr;
+  grid-template-rows: 1fr 2fr 2fr 2fr 2fr;
   width: 80%;
 }
 
@@ -28,8 +28,23 @@ body {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.box4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.box5 {
+  border: 1px solid black;
+}
+
 .box {
   border: 1px solid black;
+}
+
+#hrtbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #title {
