@@ -1,11 +1,34 @@
-body {
-  display: flex;
+/* body {
+  display: grid;
   justify-content: center;
   background-color: white;
   height: 90vh;
-}
+} */
 
-.boxes {
+.text-center {
+  text-align: center !important;
+}
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+.row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+user agent stylesheet div {
+  display: block;
+}
+/* .boxes {
   display: grid;
   grid-template-rows: 1fr 2fr 2fr 2fr 2fr;
   width: 80%;
@@ -39,7 +62,7 @@ body {
 
 .box {
   border: 1px solid black;
-}
+} */
 
 #hrtbox {
   display: flex;
