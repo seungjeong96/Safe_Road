@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
-const portName = "COM8";
+const portName = "COM7";
 
 const arduinoSerialPort = new SerialPort({
   path: portName,
@@ -108,10 +108,18 @@ arduinoSerialPort.on("open", () => {
 });
 
 arduinoSerialPort.on("data", (data) => {
-  const accData = data.toString();
-  // const parsedData = JSON.parse(accData);
-  fs.writeFileSync("first.json", parsedData);
+  setTimeout(function () {
+    const accData = data;
+    //console.log(accData);
+    const parsedData = JSON.parse(accData);
+    //console.log(accData);
+    console.log(parsedData.axisX);
+    console.log(parsedData.axisY);
+    console.log(parsedData.axisZ);
+    // fs.writeFileSync("first.json", parsedData);
+  }, 10000);
+
   //const dataBuffer = fs.readFileSync("first.json");
-  console.log(dataBuffer.toString());
+  //console.log(dataBuffer.toString());
 });
 // //가속도 데이터 get
