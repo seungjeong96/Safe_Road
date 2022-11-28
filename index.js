@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
-const portName = "COM7";
+const portName = "COM8";
 
 const arduinoSerialPort = new SerialPort({
   path: portName,
@@ -109,7 +109,7 @@ arduinoSerialPort.on("open", () => {
 
 arduinoSerialPort.on("data", (data) => {
   const accData = data.toString();
-  const parsedData = JSON.parse(accData);
+  // const parsedData = JSON.parse(accData);
   fs.writeFileSync("first.json", parsedData);
   //const dataBuffer = fs.readFileSync("first.json");
   console.log(dataBuffer.toString());
