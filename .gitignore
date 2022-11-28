@@ -1497,6 +1497,7 @@ node_modules/bootstrap/scss/mixins/_utilities.scss
 node_modules/bootstrap/scss/mixins/_visually-hidden.scss
 node_modules/bootstrap/scss/utilities/_api.scss
 node_modules/bootstrap/scss/vendor/_rfs.scss
+<<<<<<< HEAD
 first.json
 test.js
 node_modules/.bin/node-gyp-build
@@ -1703,3 +1704,5 @@ node_modules/util/node_modules/inherits/LICENSE
 node_modules/util/node_modules/inherits/README.md
 node_modules/util/support/isBuffer.js
 node_modules/util/support/isBufferBrowser.js
+=======
+>>>>>>> a5877e1c25187bb5b97fefcc3f2d1fbb80f0ae71
