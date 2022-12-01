@@ -8,14 +8,6 @@ const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const portName = "COM7";
 
-const arduinoSerialPort = new SerialPort({
-  path: portName,
-  baudRate: 115200,
-});
-
-const parser = new ReadlineParser();
-arduinoSerialPort.pipe(parser);
-
 // cors 방지를 위한 미들웨어 적용
 app.use(cors());
 // HTTP 데이터를 받을때 패킷의 용량제한 500mb까지 허용
@@ -102,24 +94,28 @@ server.listen(port, () => {
 });
 
 // 심박수 웹페이지에 표시
-
-arduinoSerialPort.on("open", () => {
-  console.log("Serial Port Open");
+const arduinoSerialPort = new SerialPort({
+  path: portName,
+  baudRate: 115200,
 });
 
-arduinoSerialPort.on("data", (data) => {
-  setTimeout(function () {
-    const accData = data;
-    //console.log(accData);
-    const parsedData = JSON.parse(accData);
-    //console.log(accData);
-    console.log(parsedData.axisX);
-    console.log(parsedData.axisY);
-    console.log(parsedData.axisZ);
-    // fs.writeFileSync("first.json", parsedData);
-  }, 10000);
+const parser = arduinoSerialPort.pipe(
+  new ReadlineParser({ delimiter: "\r\n" })
+);
+function readGyro(data) {
+  const a = "-1.00,-1.00,-1.00";
+  const b = "1.00,-1.00,1.00";
+  const regex = /-?\d{1,3}.\d{2},-?\d{1,3}.\d{2},-?\d{1,3}.\d{2}/;
+  const dataString = data.toString();
 
-  //const dataBuffer = fs.readFileSync("first.json");
-  //console.log(dataBuffer.toString());
-});
+  //console.log(dataString, regex.test(dataString));
+  if (regex.test(dataString)) {
+    let [axisX, axisY, axisZ] = dataString
+      .split(",")
+      .map((item) => parseFloat(item));
+    console.log(axisX, axisY, axisZ);
+  }
+}
+
+parser.on("data", readGyro);
 // //가속도 데이터 get
