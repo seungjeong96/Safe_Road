@@ -7,6 +7,7 @@ const path = require("path");
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const portName = "COM7";
+const ejs = require("ejs");
 
 // cors 방지를 위한 미들웨어 적용
 app.use(cors());
@@ -19,7 +20,7 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "500mb" }));
 
 // static 파일 public으로
-app.use(express.static("public"));
+app.use(express.static("views"));
 
 // css 적용
 app.set("view engine", "ejs");
@@ -27,7 +28,7 @@ app.engine("html", require("ejs").renderFile);
 
 // html 파일 렌더링
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
+  res.render("index");
 });
 
 // 웹소켓 설정
@@ -113,7 +114,7 @@ function readGyro(data) {
     let [axisX, axisY, axisZ] = dataString
       .split(",")
       .map((item) => parseFloat(item));
-    console.log(axisX, axisY, axisZ);
+    //console.log(axisX, axisY, axisZ);
   }
 }
 
