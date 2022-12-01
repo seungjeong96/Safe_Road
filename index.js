@@ -9,6 +9,15 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 const portName = "COM7";
 const ejs = require("ejs");
 
+const arduinoSerialPort = new SerialPort({
+  path: portName,
+  baudRate: 115200,
+});
+
+const parser = arduinoSerialPort.pipe(
+  new ReadlineParser({ delimiter: "\r\n" })
+);
+
 // cors 방지를 위한 미들웨어 적용
 app.use(cors());
 // HTTP 데이터를 받을때 패킷의 용량제한 500mb까지 허용
@@ -26,8 +35,26 @@ app.use(express.static("views"));
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
+function readGyro(data) {
+  const a = "-1.00,-1.00,-1.00";
+  const b = "1.00,-1.00,1.00";
+  const regex = /-?\d{1,3}.\d{2},-?\d{1,3}.\d{2},-?\d{1,3}.\d{2}/;
+  const dataString = data.toString();
+
+  //console.log(dataString, regex.test(dataString));
+  if (regex.test(dataString)) {
+    let [axisX, axisY, axisZ] = dataString
+      .split(",")
+      .map((item) => parseFloat(item));
+
+    console.log(axisX, axisY, axisZ);
+  }
+}
+parser.on("data", readGyro);
 // html 파일 렌더링
 app.get("/", (req, res) => {
+  // //가속도 데이터 get
+
   res.render("index");
 });
 
@@ -95,28 +122,3 @@ server.listen(port, () => {
 });
 
 // 심박수 웹페이지에 표시
-const arduinoSerialPort = new SerialPort({
-  path: portName,
-  baudRate: 115200,
-});
-
-const parser = arduinoSerialPort.pipe(
-  new ReadlineParser({ delimiter: "\r\n" })
-);
-function readGyro(data) {
-  const a = "-1.00,-1.00,-1.00";
-  const b = "1.00,-1.00,1.00";
-  const regex = /-?\d{1,3}.\d{2},-?\d{1,3}.\d{2},-?\d{1,3}.\d{2}/;
-  const dataString = data.toString();
-
-  //console.log(dataString, regex.test(dataString));
-  if (regex.test(dataString)) {
-    let [axisX, axisY, axisZ] = dataString
-      .split(",")
-      .map((item) => parseFloat(item));
-    //console.log(axisX, axisY, axisZ);
-  }
-}
-
-parser.on("data", readGyro);
-// //가속도 데이터 get
