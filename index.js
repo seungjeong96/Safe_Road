@@ -46,11 +46,19 @@ function readGyro(data) {
     let [axisX, axisY, axisZ] = dataString
       .split(",")
       .map((item) => parseFloat(item));
-
-    console.log(axisX, axisY, axisZ);
+    const GyroData = {
+      X: axisX,
+      Y: axisY,
+      Z: axisZ,
+    };
+    //console.log(axisX, axisY, axisZ);
+    const stringJson = JSON.stringify(GyroData);
+    fs.writeFileSync("GyroData.json", stringJson);
   }
 }
+
 parser.on("data", readGyro);
+
 // html 파일 렌더링
 app.get("/", (req, res) => {
   // //가속도 데이터 get
