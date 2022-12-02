@@ -169,7 +169,7 @@
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
               <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">심박수</h4>
+                <h4 class="my-0 fw-normal">자이로 센서</h4>
               </div>
               <div class="card-body">
                 <h1 class="card-title pricing-card-title">
@@ -181,37 +181,26 @@
                     <p>Y: <span id="axisY" class="data"></span>°</p>
                     <p>Z: <span id="axisZ" class="data"></span>°</p>
                   </div>
-                  <form id="form" action="">
-                    <input id="input" autocomplete="off" /><button>Send</button>
-                  </form>
 
                   <script>
-                    var socket = io();
-
-                    var axisX = document.getElementById("axisX");
-                    var axisY = document.getElementById("axisY");
-                    var axisZ = document.getElementById("axisZ");
-
-                    var form = document.getElementById("form");
-                    var input = document.getElementById("input");
-
-                    form.addEventListener("submit", (e) => {
-                      e.preventDefault();
-                      if (input.value) {
-                        socket.emit("message", input.value);
-                        input.value = "";
-                        console.log("sending OK");
-                      }
-                    });
-
-                    socket.on("data", (msg) => {
-                      //console.log(msg);
-                      const obj = JSON.parse(msg);
-                      console.log(obj);
-                      axisX.innerText = obj.axisX;
-                      axisY.innerText = obj.axisY;
-                      axisZ.innerText = obj.axisZ;
-                    });
+                    var ajax_f = function () {
+                      url = "GyroData.json";
+                      var xhr = new XMLHttpRequest();
+                      xhr.open("POST", "url");
+                      xhr.setRequestHeader("Content-type", "application/json");
+                      xhr.send();
+                      xhr.addEventListener("load", function () {
+                        data = xhr.responseText;
+                        data = JSON.parse(data);
+                        // console.log(result.Values[0].Value)
+                        document.getElementById("axisX").innerHTML =
+                          data.Values[1].Value;
+                        document.getElementById("axisY").innerHTML =
+                          data.Values[2].Value;
+                        document.getElementById("axisZ").innerHTML =
+                          data.Values[3].Value;
+                      });
+                    };
                   </script>
                 </ul>
                 <button type="button" class="w-100 btn btn-lg btn-primary">
