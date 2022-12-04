@@ -30,6 +30,20 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
+
+    <script language="javascript">
+      function stressStatus(stressLevel, swearingData) {
+        if (stressLevel > 50 || swearingData == 1) {
+          document.getElementById("faceEmoticon").src = "./images/frowning.png";
+          //text = "스트레스 지수가 정상입니다!";
+        }
+        if (stressLevel < 50 || swearingData == 0) {
+          faceEmoticon.src = "./images/smile.png";
+          //text = "스트레스 지수가 높습니다. 스트레스 완화 시스템을 가동합니다.";
+          
+        }
+      }
+    </script>
   </head>
   <!------------------------------------ BODY --------------------------------->
   <!--------------------------------------------------------------------------->
@@ -125,20 +139,13 @@
                 <h4 class="my-0 fw-normal">Free</h4>
               </div>
 
-              <img src="../images/smile.png" class="card-img-top" alt="smile" />
+              stressStatus(60, 1);
+              <img src="images/annoyed.png" id="faceEmoticon" class="card-img-top" alt="Fail to load image" />
               <div class="card-body">
-                <p class="card-text">스트레스 지수가 정상입니다!</p>
+                <p class="card-text">text</p>
               </div>
 
-              <img
-                src="../images/frowning.png"
-                class="card-img-top"
-                alt="smile"
-              />
-              <div class="card-body">
-                <p class="card-text">
-                  스트레스 지수가 높습니다. 스트레스 완화 시스템을 가동합니다.
-                </p>
+
               </div>
             </div>
           </div>
@@ -177,30 +184,34 @@
                 </h1>
                 <ul class="list-unstyled mt-3 mb-4">
                   <div id="messages">
-                    <p>X: <span id="axisX" class="data"></span>°</p>
-                    <p>Y: <span id="axisY" class="data"></span>°</p>
-                    <p>Z: <span id="axisZ" class="data"></span>°</p>
+                    <p>X: <span id="axisX"></span>°</p>
+                    <p>Y: <span id="axisY"></span>°</p>
+                    <p>Z: <span id="axisZ"></span>°</p>
                   </div>
 
-                  <script>
-                    var ajax_f = function () {
-                      url = "GyroData.json";
-                      var xhr = new XMLHttpRequest();
-                      xhr.open("POST", "url");
-                      xhr.setRequestHeader("Content-type", "application/json");
-                      xhr.send();
-                      xhr.addEventListener("load", function () {
-                        data = xhr.responseText;
-                        data = JSON.parse(data);
-                        // console.log(result.Values[0].Value)
-                        document.getElementById("axisX").innerHTML =
-                          data.Values[1].Value;
-                        document.getElementById("axisY").innerHTML =
-                          data.Values[2].Value;
-                        document.getElementById("axisZ").innerHTML =
-                          data.Values[3].Value;
-                      });
-                    };
+                  <script type="text/javascript">
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange ==
+                      function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                          readJsonFile(this.responseText);
+                        }
+                      };
+
+                    xhr.open("GET", "GyroData.json", true);
+                    xhr.send();
+
+                    function readJsonFile(jsonDataFile) {
+                      let jsonData = JSON.parse(jsonDataFile);
+
+                      console.log(jsonData.X);
+                      document.getElementById("axisX").innerHTML =
+                        jsonData[0].X;
+                      document.getElementById("axisY").innerHTML =
+                        jsonData[0].Y;
+                      document.getElementById("axisZ").innerHTML =
+                        jsonData[0].Z;
+                    }
                   </script>
                 </ul>
                 <button type="button" class="w-100 btn btn-lg btn-primary">
@@ -376,5 +387,5 @@
       License: CC BY-SA 4.0
     </h6>
   </body>
-  <script src="./index.html"></script>
+  <!-- <script src="./index.html"></script> -->
 </html>

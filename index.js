@@ -36,8 +36,8 @@ app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
 function readGyro(data) {
-  const a = "-1.00,-1.00,-1.00";
-  const b = "1.00,-1.00,1.00";
+  //const a = "-1.00,-1.00,-1.00";
+  //const b = "1.00,-1.00,1.00";
   const regex = /-?\d{1,3}.\d{2},-?\d{1,3}.\d{2},-?\d{1,3}.\d{2}/;
   const dataString = data.toString();
 
@@ -53,7 +53,7 @@ function readGyro(data) {
     };
     //console.log(axisX, axisY, axisZ);
     const stringJson = JSON.stringify(GyroData);
-    fs.writeFileSync("GyroData.json", stringJson);
+    fs.writeFileSync("./views/GyroData.json", stringJson);
   }
 }
 
@@ -61,9 +61,7 @@ parser.on("data", readGyro);
 
 // html 파일 렌더링
 app.get("/", (req, res) => {
-  // //가속도 데이터 get
-
-  res.render("index");
+  res.sendFile(__dirname + "/views/index.html");
 });
 
 // 웹소켓 설정
