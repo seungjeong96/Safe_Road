@@ -92,278 +92,186 @@
                 <h4 class="my-0 fw-normal">스트레스 수치</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  $0
-                  <small class="text-muted fw-light">/mo</small>
-                </h1>
+                <h1 class="card-title pricing-card-title">내부 타이틀</h1>
                 <ul class="list-unstyled mt-3 mb-4"></ul>
-                <button
-                  type="button"
-                  class="w-100 btn btn-lg btn-outline-primary"
-                >
-                  Sign up for free
-                </button>
               </div>
             </div>
           </div>
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
               <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Free</h4>
+                <h4 class="my-0 fw-normal">스트레스 상태</h4>
               </div>
               <script language="javascript">
                 function stressStatus(stressLevel, swearingData) {
                   if (stressLevel > 50 || swearingData == 1) {
                     document.getElementById("faceEmoticon").src =
                       "./images/frowning.png";
-                    //text = "스트레스 지수가 정상입니다!";
+                    document.getElementById("statusText").innerHTML =
+                      "스트레스 지수가 높습니다. 스트레스 완화 시스템을 가동합니다.";
                   }
                   if (stressLevel < 50 || swearingData == 0) {
                     faceEmoticon.src = "./images/smile.png";
-                    //text = "스트레스 지수가 높습니다. 스트레스 완화 시스템을 가동합니다.";
+                    document.getElementById("statusText").innerHTML =
+                      "스트레스 지수가 정상입니다!";
                   }
                 }
               </script>
 
-              <button
-                type="button"
-                onclick="stressStatus(60,1)"
-                class="w-100 btn btn-lg btn-primary"
-              >
-                Start
-              </button>
               <img
                 src="images/annoyed.png"
                 id="faceEmoticon"
                 class="card-img-top"
                 alt="Fail to load image"
               />
+              <p id="statusText"></p>
+              <button
+                type="button"
+                onclick="stressStatus(6,0)"
+                class="w-100 btn btn-lg btn-primary"
+              >
+                Start
+              </button>
               <div class="card-body">
                 <p class="card-text">text</p>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="card mb-4 rounded-3 shadow-sm">
-            <div class="card-header py-3">
-              <h4 class="my-0 fw-normal">Free</h4>
-            </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">
-                $0<small class="text-muted fw-light">/mo</small>
-              </h1>
-              <ul class="list-unstyled mt-3 mb-4">
-                <li>10 users included</li>
-                <li>2 GB of storage</li>
-                <li>Email support</li>
-                <li>Help center access</li>
-              </ul>
-              <button
-                type="button"
-                class="w-100 btn btn-lg btn-outline-primary"
-              >
-                Sign up for free
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card mb-4 rounded-3 shadow-sm">
-            <div class="card-header py-3">
-              <h4 class="my-0 fw-normal">자이로 센서</h4>
-            </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">
-                $15<small class="text-muted fw-light">/mo</small>
-              </h1>
-              <ul class="list-unstyled mt-3 mb-4">
-                <div id="messages">
-                  <p>X: <span id="axisX"></span>°</p>
-                  <p>Y: <span id="axisY"></span>°</p>
-                  <p>Z: <span id="axisZ"></span>°</p>
-                </div>
+          <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm border-primary">
+              <div class="card-header py-3 text-bg-primary border-primary">
+                <h4 class="my-0 fw-normal">욕설 사용 감지기</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title"></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <div id="label-container"></div>
+                  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+                  <p id="currentDisplay"></p>
+                  <p id="swearCountDisplay"></p>
+                  <p id="swearAlertDisplay"></p>
 
-                <script type="text/javascript">
-                  var xhr = new XMLHttpRequest();
-                  xhr.onreadystatechange ==
-                    function () {
-                      if (xhr.readyState == 4 && xhr.status == 200) {
-                        readJsonFile(this.responseText);
-                      }
-                    };
+                  <script type="text/javascript">
+                    // more documentation available at
+                    // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
 
-                  xhr.open("GET", "GyroData.json", true);
-                  xhr.send();
+                    // the link to your model provided by Teachable Machine export panel
+                    const URL =
+                      "https://teachablemachine.withgoogle.com/models/s5qwN9lB_/";
 
-                  function readJsonFile(jsonDataFile) {
-                    let jsonData = JSON.parse(jsonDataFile);
+                    let status = "Background Noise";
+                    let currentDetection =
+                      document.getElementById("currentDisplay");
+                    let swearCountDisplay =
+                      document.getElementById("swearCountDisplay");
+                    let swearAlertDisplay =
+                      document.getElementById("swearAlertDisplay");
 
-                    console.log(jsonData.X);
-                    document.getElementById("axisX").innerHTML = jsonData[0].X;
-                    document.getElementById("axisY").innerHTML = jsonData[0].Y;
-                    document.getElementById("axisZ").innerHTML = jsonData[0].Z;
-                  }
-                </script>
-              </ul>
-              <button type="button" class="w-100 btn btn-lg btn-primary">
-                Get started
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card mb-4 rounded-3 shadow-sm border-primary">
-            <div class="card-header py-3 text-bg-primary border-primary">
-              <h4 class="my-0 fw-normal">심박수 그래프</h4>
-            </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">
-                $29<small class="text-muted fw-light">/mo</small>
-              </h1>
-              <ul class="list-unstyled mt-3 mb-4">
-                <li>30 users included</li>
-                <li>15 GB of storage</li>
-                <li>Phone and email support</li>
-                <li>Help center access</li>
-              </ul>
-              <button type="button" class="w-100 btn btn-lg btn-primary">
-                Contact us
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card mb-4 rounded-3 shadow-sm border-primary">
-            <div class="card-header py-3 text-bg-primary border-primary">
-              <h4 class="my-0 fw-normal">욕설 사용 감지기</h4>
-            </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">
-                $29<small class="text-muted fw-light">/mo</small>
-              </h1>
-              <ul class="list-unstyled mt-3 mb-4">
-                <div id="label-container"></div>
-                <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
-                <p id="currentDisplay"></p>
-                <p id="swearCountDisplay"></p>
-                <p id="swearAlertDisplay"></p>
+                    //-------------------------------DONT EDIT BELOW---------------------
+                    async function createModel() {
+                      const checkpointURL = URL + "model.json"; // model topology
+                      const metadataURL = URL + "metadata.json"; // model metadata
 
-                <script type="text/javascript">
-                  // more documentation available at
-                  // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
+                      const recognizer = speechCommands.create(
+                        "BROWSER_FFT", // fourier transform type, not useful to change
+                        undefined, // speech commands vocabulary feature, not useful for your models
+                        checkpointURL,
+                        metadataURL
+                      );
 
-                  // the link to your model provided by Teachable Machine export panel
-                  const URL =
-                    "https://teachablemachine.withgoogle.com/models/s5qwN9lB_/";
+                      // check that model and metadata are loaded via HTTPS requests.
+                      await recognizer.ensureModelLoaded();
 
-                  let status = "Background Noise";
-                  let currentDetection =
-                    document.getElementById("currentDisplay");
-                  let swearCountDisplay =
-                    document.getElementById("swearCountDisplay");
-                  let swearAlertDisplay =
-                    document.getElementById("swearAlertDisplay");
-
-                  //-------------------------------DONT EDIT BELOW---------------------
-                  async function createModel() {
-                    const checkpointURL = URL + "model.json"; // model topology
-                    const metadataURL = URL + "metadata.json"; // model metadata
-
-                    const recognizer = speechCommands.create(
-                      "BROWSER_FFT", // fourier transform type, not useful to change
-                      undefined, // speech commands vocabulary feature, not useful for your models
-                      checkpointURL,
-                      metadataURL
-                    );
-
-                    // check that model and metadata are loaded via HTTPS requests.
-                    await recognizer.ensureModelLoaded();
-
-                    return recognizer;
-                  }
-                  //-----------------------------------------------------------------------
-                  async function init() {
-                    const recognizer = await createModel();
-                    const classLabels = recognizer.wordLabels(); // get class labels
-                    const labelContainer =
-                      document.getElementById("label-container");
-
-                    var swearCount = 0;
-                    var nonSwearCount = 0;
-                    var swearCountArray = new Array(0, 0);
-                    var angryLevel = 0;
-
-                    for (let i = 0; i < classLabels.length; i++) {
-                      labelContainer.appendChild(document.createElement("div"));
+                      return recognizer;
                     }
+                    //-----------------------------------------------------------------------
+                    async function init() {
+                      const recognizer = await createModel();
+                      const classLabels = recognizer.wordLabels(); // get class labels
+                      const labelContainer =
+                        document.getElementById("label-container");
 
-                    // listen() takes two arguments:
-                    // 1. A callback function that is invoked anytime a word is recognized.
-                    // 2. A configuration object with adjustable fields
-                    recognizer.listen(
-                      (result) => {
-                        const scores = result.scores; // probability of prediction for each class
-                        // render the probability scores per class
-                        for (let i = 0; i < classLabels.length; i++) {
-                          const classPrediction =
-                            classLabels[i] + ": " + result.scores[i].toFixed(2);
-                          //labelContainer.childNodes[i].innerHTML =
-                          //  classPrediction;
-                        }
+                      var swearCount = 0;
+                      var nonSwearCount = 0;
+                      var swearCountArray = new Array(0, 0);
+                      var angryLevel = 0;
 
-                        for (let i = 0; i < 9; i++) {
-                          if (result.scores[i] >= 0.8) {
-                            status = classLabels[i]; //(0:test 1:개새끼 2:미친 3,4,5: 배경소음 6:씨발 7:씨발(장난) 8:욕설
-                            if (i == 1 || i == 2 || i == 6 || i == 8) {
-                              swearCountArray[0]++;
-                            } else swearCountArray[1]++;
-                          }
-                          setTimeout(function () {
-                            swearcount = 0;
-                            swearCountArray[0] = 0;
-                            swearCountArray[1] = 0;
-                          }, 10000);
-                        }
-
-                        currentDetection.innerHTML =
-                          "현재 인식 단어: " + status;
-                        swearCountDisplay.innerHTML =
-                          "욕설" +
-                          swearCountArray[0] +
-                          "회" +
-                          "  욕설 아님" +
-                          swearCountArray[1] +
-                          "회";
-                        if (swearCountArray[0] > 2) {
-                          swearAlertDisplay.innerHTML =
-                            " 욕설이 2회 이상 감지되었습니다. ";
-                        } else {
-                          swearAlertDisplay.innerHTML =
-                            " 난폭운전 예방 시스템 ";
-                        }
-                      },
-                      {
-                        includeSpectrogram: true, // in case listen should return result.spectrogram
-                        probabilityThreshold: 0.75,
-                        invokeCallbackOnNoiseAndUnknown: true,
-                        overlapFactor: 0.5, // probably want between 0.5 and 0.75. More info in README
+                      for (let i = 0; i < classLabels.length; i++) {
+                        labelContainer.appendChild(
+                          document.createElement("div")
+                        );
                       }
-                    );
 
-                    // Stop the recognition in 5 seconds.
-                    // setTimeout(() => recognizer.stopListening(), 5000);
-                  }
-                </script>
-              </ul>
-              <button
-                type="button"
-                onclick="init()"
-                class="w-100 btn btn-lg btn-primary"
-              >
-                Start
-              </button>
+                      // listen() takes two arguments:
+                      // 1. A callback function that is invoked anytime a word is recognized.
+                      // 2. A configuration object with adjustable fields
+
+                      recognizer.listen(
+                        (result) => {
+                          const scores = result.scores; // probability of prediction for each class
+                          // render the probability scores per class
+                          for (let i = 0; i < classLabels.length; i++) {
+                            const classPrediction =
+                              classLabels[i] +
+                              ": " +
+                              result.scores[i].toFixed(2);
+                            //labelContainer.childNodes[i].innerHTML =
+                            //  classPrediction;
+                          }
+
+                          for (let i = 0; i < 9; i++) {
+                            if (result.scores[i] >= 0.8) {
+                              status = classLabels[i]; //(0:test 1:개새끼 2:미친 3,4,5: 배경소음 6:씨발 7:씨발(장난) 8:욕설
+                              if (i == 1 || i == 2 || i == 6 || i == 8) {
+                                swearCountArray[0]++;
+                              } else swearCountArray[1]++;
+                            }
+                            setTimeout(function () {
+                              swearcount = 0;
+                              swearCountArray[0] = 0;
+                              swearCountArray[1] = 0;
+                            }, 10000);
+                          }
+
+                          currentDetection.innerHTML =
+                            "현재 인식 단어: " + status;
+                          swearCountDisplay.innerHTML =
+                            "욕설" +
+                            swearCountArray[0] +
+                            "회" +
+                            "  욕설 아님" +
+                            swearCountArray[1] +
+                            "회";
+                          if (swearCountArray[0] > 2) {
+                            swearAlertDisplay.innerHTML =
+                              " 욕설이 2회 이상 감지되었습니다. ";
+                          } else {
+                            swearAlertDisplay.innerHTML =
+                              " 난폭운전 예방 시스템 ";
+                          }
+                        },
+                        {
+                          includeSpectrogram: true, // in case listen should return result.spectrogram
+                          probabilityThreshold: 0.75,
+                          invokeCallbackOnNoiseAndUnknown: true,
+                          overlapFactor: 0.5, // probably want between 0.5 and 0.75. More info in README
+                        }
+                      );
+
+                      // Stop the recognition in 5 seconds.
+                      // setTimeout(() => recognizer.stopListening(), 5000);
+                    }
+                  </script>
+                </ul>
+                <button
+                  type="button"
+                  onclick="init()"
+                  class="w-100 btn btn-lg btn-primary"
+                >
+                  Start
+                </button>
+              </div>
             </div>
           </div>
         </div>
