@@ -14,11 +14,14 @@ const arduinoSerialPort = new SerialPort({
   baudRate: 115200,
 });
 
+// 시리얼 포트 에러처리
+arduinoSerialPort.on("error", function (err) {
+  console.log(err);
+});
+
 const parser = arduinoSerialPort.pipe(
   new ReadlineParser({ delimiter: "\r\n" })
 );
-
-//시리얼 포트 에러처리 해야한다.
 
 // cors 방지를 위한 미들웨어 적용
 app.use(cors());
@@ -90,13 +93,13 @@ socketWatch4.on("connect", (socket) => {
   });
 });
 
+socketWatch4.on("disconnect", () => {
+  console.log("watch4 웹 소켓 연결 끊김");
+});
+
 const webpage = io.of("/webpage");
 webpage.on("connect", (socket) => {
   console.log("웹페이지 웹소켓 연결됨");
-});
-
-socket.on("disconnect", () => {
-  console.log("watch4 웹 소켓 연결 끊김");
 });
 
 const port = 3000;
