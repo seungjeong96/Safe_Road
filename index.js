@@ -18,6 +18,8 @@ const parser = arduinoSerialPort.pipe(
   new ReadlineParser({ delimiter: "\r\n" })
 );
 
+//시리얼 포트 에러처리 해야한다.
+
 // cors 방지를 위한 미들웨어 적용
 app.use(cors());
 // HTTP 데이터를 받을때 패킷의 용량제한 500mb까지 허용
@@ -67,6 +69,7 @@ app.get("/", (req, res) => {
 // 웹소켓 설정
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const { serialize } = require("v8");
 
 // 웹소켓 cors 방지적용
 const io = new Server(server, {
@@ -75,52 +78,26 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-
-  socket.emit("result", "${socket.id}로 연결되었습니다.");
-  parser.on("data", (data) => {
-    console.log(data);
-    socket.emit("data", data);
-  });
-
-  socket.on("message", (msg) => {
-    //받고
-    console.log("클라이언트의 요청이 있습니다.");
-    console.log(msg);
-    socket.emit("result", `수신된 메세지는 "${msg}" 입니다.`);
-  });
-});
 // 웹소켓 연결 시작
 // 초기 path는 /watch4로 설정함
 
-// const socketWatch4 = io.of("/watch4");
-// socketWatch4.on("connection", (socket) => {
-//   console.log(`watch4 웹 소켓 연결됨`);
-//   socket.on("hrate", (msg) => {
-//     console.log(msg);
-//     webpage.emit("hrate", msg);
-//     // 로직 구현
-//   });
+const socketWatch4 = io.of("/watch4");
+socketWatch4.on("connect", (socket) => {
+  console.log("스마트워치 웹소켓 연결됨");
+  socket.on("hrate", (msg) => {
+    console.log(msg);
+    webpage.emit("hrate", msg);
+  });
+});
 
-//   const webpage = io.of("/webpage");
-//   webpage.on("connect", (socket) => {
-//     console.log("웹페이지 웹소켓 연결됨");
-//   });
+const webpage = io.of("/webpage");
+webpage.on("connect", (socket) => {
+  console.log("웹페이지 웹소켓 연결됨");
+});
 
-//   /* 가속도
-//   socket.on("acc", (msg) => {
-//     console.log(msg);
-//   });
-//   */
-
-//   socket.on("disconnect", () => {
-//     console.log("watch4 웹 소켓 연결 끊김");
-//   });
-// });
+socket.on("disconnect", () => {
+  console.log("watch4 웹 소켓 연결 끊김");
+});
 
 const port = 3000;
 server.listen(port, () => {
