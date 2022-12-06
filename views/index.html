@@ -132,15 +132,12 @@
               >
                 Start
               </button>
-              <div class="card-body">
-                <p class="card-text">text</p>
-              </div>
             </div>
           </div>
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm border-primary">
               <div class="card-header py-3 text-bg-primary border-primary">
-                <h4 class="my-0 fw-normal">욕설 사용 감지기</h4>
+                <h4 class="my-0 fw-normal">음성 데이터 분석</h4>
               </div>
               <div class="card-body">
                 <h1 class="card-title pricing-card-title"></h1>
@@ -216,14 +213,13 @@
                               classLabels[i] +
                               ": " +
                               result.scores[i].toFixed(2);
-                            //labelContainer.childNodes[i].innerHTML =
-                            //  classPrediction;
+                            // labelContainer.childNodes[i].innerHTML = classPrediction;
                           }
 
                           for (let i = 0; i < 9; i++) {
                             if (result.scores[i] >= 0.8) {
-                              status = classLabels[i]; //(0:test 1:개새끼 2:미친 3,4,5: 배경소음 6:씨발 7:씨발(장난) 8:욕설
-                              if (i == 1 || i == 2 || i == 6 || i == 8) {
+                              status = classLabels[i]; //(0:개새끼 1:미친 2,3,4: 배경소음 5:씨발 6:씨발(장난) 7:욕설 8:탄식 및 한숨
+                              if (i == 0 || i == 1 || i == 5 || i == 8) {
                                 swearCountArray[0]++;
                               } else swearCountArray[1]++;
                             }
@@ -231,7 +227,7 @@
                               swearcount = 0;
                               swearCountArray[0] = 0;
                               swearCountArray[1] = 0;
-                            }, 10000);
+                            }, 100000);
                           }
 
                           currentDetection.innerHTML =
@@ -245,10 +241,10 @@
                             "회";
                           if (swearCountArray[0] > 2) {
                             swearAlertDisplay.innerHTML =
-                              " 욕설이 2회 이상 감지되었습니다. ";
+                              " 스트레스가 감지되었습니다 ";
                           } else {
                             swearAlertDisplay.innerHTML =
-                              " 난폭운전 예방 시스템 ";
+                              " 오늘도 안전 운전 하세요 :) ";
                           }
                         },
                         {
