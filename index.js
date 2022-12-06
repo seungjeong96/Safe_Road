@@ -72,6 +72,7 @@ app.get("/", (req, res) => {
 // 웹소켓 설정
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const e = require("express");
 const { serialize } = require("v8");
 
 // 웹소켓 cors 방지적용
@@ -85,12 +86,52 @@ const io = new Server(server, {
 // 초기 path는 /watch4로 설정함
 
 // 데이터 저장 리스트
-hrlist = [];
+hrlist = []; //hv저장
 
 //스트레스 분석 함수
-function analysis_stress(hrlist) {
-  stress = 0;
 
+function cal_average(ex_list) {
+  let result = ex_list.reduce(function add(sum, currValue) {
+    return sum + currValue;
+  }, 0);
+
+  let average = result / ex_list.length;
+
+  return average;
+}
+
+function cal_std(ex_list) {
+  let mean = cal_average(ex_list);
+  ex_list = ex_list.map((k) => {
+    return (k - mean) ** 2;
+  });
+
+  let sum = ex_list.reduce((acc, curr) => acc + curr, 0);
+
+  let variance = sum / ex_list.length;
+
+  return Math.sqrt(sum / ex_list.length);
+}
+
+function analysis_stress(hrlist) {
+  let stress = 0;
+  let rmssd = 0;
+  let sdnn = 0;
+
+  rr_diff = [];
+  for (let i = 0; i < hrlist.length - 1; i++) {
+    rr_diff[i] = (hrlist[i] - hrlist[i + 1]) ** 2;
+  }
+  rmssd = Math.sqrt(cal_average(rr_diff));
+
+  sdnn = cal_std(hrlist);
+
+  if (rmssd >= 9.8 && sdnn >= 47) {
+    stress = 1;
+  } else {
+    stress = 0;
+  }
+  console.log(stress);
   webpage.emit("stress_level", stress);
 }
 
@@ -103,10 +144,10 @@ socketWatch4.on("connect", (socket) => {
     //webpage.emit("hrate", msg);
     if (msg != 0) {
       if (hrlist.length < 36) {
-        hrlist.push(msg);
+        hrlist.push(60000 / msg);
       } else {
         analysis_stress(hrlist);
-        hlist.length = 0; //배열 비우기
+        hrlist.length = 0; //배열 비우기
       }
     }
   });

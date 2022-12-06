@@ -30,6 +30,13 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
+    <!---socket-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js"
+      integrity="sha512-iWPnCISAd/J+ZacwV2mbNLCaPGRrRo5OS81lKTVPtRg1wGTC20Cfmp5Us5RcbLv42QLdbAWl0MI57yox5VecQg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <!------------------------------------ BODY --------------------------------->
   <!--------------------------------------------------------------------------->
@@ -104,28 +111,28 @@
                 audioPlay.src = "./audio/classic.mp3";
 
                 //스트레스 레벨에 따라 이모티콘 변화
+
+                const socket = io("http://localhost:3000/webpage");
+                console.log("웹페이지 웹소켓 연결됨");
+                socket.on("stress_level", (stress) => {
+                  stressStatus(stress, 0);
+                });
+
                 function stressStatus(stressLevel, swearingData) {
-                  if (stressLevel == 3 || swearingData == 1) {
+                  if (stressLevel == 1 || swearingData == 1) {
                     document.getElementById("faceEmoticon").src =
                       "./images/frowning.png";
                     document.getElementById("statusText").innerHTML =
                       "스트레스 지수가 높습니다. 스트레스 완화 시스템을 가동합니다.";
                     audioPlay.play();
                   }
-                  if (stressLevel == 1 && swearingData == 0) {
+                  if (stressLevel == 0 && swearingData == 0) {
                     faceEmoticon.src = "./images/smile.png";
                     document.getElementById("statusText").innerHTML =
                       "스트레스 지수가 정상입니다!";
                     audioPlay.pause();
                   }
                 }
-
-                //스트레스 웹소켓으로 받으면 스트레스 이모티콘 함수 실행.
-                const socket = io("http:localhost:3000/webpage");
-                console.log("웹페이지 웹소켓 연결됨");
-                socket.on("stress_level", (stress) => {
-                  stressStatus(stress, 0);
-                });
               </script>
 
               <img
@@ -255,7 +262,7 @@
                           if (swearCountArray[0] > 2) {
                             swearAlertDisplay.innerHTML =
                               " 스트레스가 감지되었습니다 ";
-                            stressStatus(3, swearCountArray[0]);
+                            stressStatus(1, swearCountArray[0]);
                           } else {
                             swearAlertDisplay.innerHTML =
                               " 오늘도 안전 운전 하세요 :) ";
