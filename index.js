@@ -84,12 +84,31 @@ const io = new Server(server, {
 // 웹소켓 연결 시작
 // 초기 path는 /watch4로 설정함
 
+// 데이터 저장 리스트
+hrlist = [];
+
+//스트레스 분석 함수
+function analysis_stress(hrlist) {
+  stress = 0;
+
+  webpage.emit("stress_level", stress);
+}
+
 const socketWatch4 = io.of("/watch4");
+
 socketWatch4.on("connect", (socket) => {
   console.log("스마트워치 웹소켓 연결됨");
   socket.on("hrate", (msg) => {
-    console.log(msg);
-    webpage.emit("hrate", msg);
+    //console.log(msg);
+    //webpage.emit("hrate", msg);
+    if (msg != 0) {
+      if (hrlist.length < 36) {
+        hrlist.push(msg);
+      } else {
+        analysis_stress(hrlist);
+        hlist.length = 0; //배열 비우기
+      }
+    }
   });
 });
 
