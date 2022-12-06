@@ -96,7 +96,22 @@
                 <h4 class="my-0 fw-normal">난폭운전 여부</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title">내부 타이틀</h1>
+                <script>
+                  socket.on("accData", (gyroData) => {
+                    gyroDataPrinter(gyroData);
+                  });
+
+                  function gyroDataPrinter(gyroData) {
+                    var parsedGyroData = JSON.parse(gyroData);
+                    document.getElementById(axisX).innerHTML = parsedGyroData.X;
+                    document.getElementById(axisY).innerHTML = parsedGyroData.Y;
+                    document.getElementById(axisZ).innerHTML = parsedGyroData.Z;
+                  }
+                </script>
+
+                <h3 class="card-title pricing-card-title" id="axisX"></h3>
+                <h3 class="card-title pricing-card-title" id="axisY"></h3>
+                <h3 class="card-title pricing-card-title" id="axisZ"></h3>
                 <ul class="list-unstyled mt-3 mb-4"></ul>
               </div>
             </div>
@@ -115,7 +130,7 @@
                 const socket = io("http://localhost:3000/webpage");
                 console.log("웹페이지 웹소켓 연결됨");
                 socket.on("stress_level", (stress) => {
-                  stressStatus(stress, 0);
+                  stressStatus(1, 0);
                 });
 
                 function stressStatus(stressLevel, swearingData) {
