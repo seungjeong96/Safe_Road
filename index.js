@@ -56,9 +56,11 @@ function readGyro(data) {
       Y: axisY,
       Z: axisZ,
     };
-    //console.log(axisX, axisY, axisZ);
     const stringJson = JSON.stringify(GyroData);
-    fs.writeFileSync("./views/GyroData.json", stringJson);
+    webpage.emit("accData", stringJson);
+    //console.log(axisX, axisY, axisZ);
+
+    //fs.writeFileSync("./views/GyroData.json", stringJson);
   }
 }
 
