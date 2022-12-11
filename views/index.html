@@ -67,17 +67,15 @@
           </a>
 
           <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#"
-              >Safe Road</a
+            <a
+              class="me-3 py-2 text-dark text-decoration-none"
+              href="index.html"
+              >Main Page</a
             >
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#"
-              >정승호</a
-            >
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#"
-              >장희연</a
-            >
-            <a class="me-3 py-2 text-dark text-decoration-none" href="#"
-              >박수현</a
+            <a
+              class="me-3 py-2 text-dark text-decoration-none"
+              href="rdMap.html"
+              >Reckless Driving Data</a
             >
           </nav>
         </div>
@@ -89,7 +87,8 @@
       </header>
 
       <main>
-        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <!-- <div class="row row-cols-2 row-cols-md-3 mb-3 text-center"> -->
+        <div class="row">
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
               <div class="card-header py-3">
@@ -306,6 +305,87 @@
                 </button>
               </div>
             </div>
+          </div>
+          <div class="row text-center">
+            <div class="col">
+              <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                  <h4 class="my-0 fw-normal">난폭운전 지도</h4>
+                </div>
+                <div class="card-body">
+                  <div
+                    id="map"
+                    style="width: 500px; height: 400px; margin: auto"
+                  ></div>
+                  <script
+                    type="text/javascript"
+                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16ef513d6367a6f1eedaef24828af8b0"
+                  ></script>
+                  <script
+                    type="text/javascript"
+                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=clusterer,services"
+                  ></script>
+                  <script>
+                    var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+                    var options = {
+                      //지도를 생성할 때 필요한 기본 옵션
+                      center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+                      level: 3, //지도의 레벨(확대, 축소 정도)
+                    };
+
+                    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+                    //  마커를 추가하도록 지도에 이벤트를 등록합니다
+
+                    socket.on("GPSData", (gpsData) => {
+                      //gpsData : JSON?
+                      addMarker(
+                        new kakao.maps.LatLng(gpsData.lat, gpsData.lng)
+                      );
+                    });
+
+                    // 지도에 표시된 마커 객체를 가지고 있을 배열입니다
+                    var markers = [];
+
+                    // 마커 하나를 지도위에 표시합니다
+                    addMarker(new kakao.maps.LatLng(33.450701, 126.570667));
+
+                    // 마커를 생성하고 지도위에 표시하는 함수입니다
+                    function addMarker(position) {
+                      // 마커를 생성합니다
+                      var marker = new kakao.maps.Marker({
+                        position: position,
+                      });
+
+                      // 마커가 지도 위에 표시되도록 설정합니다
+                      marker.setMap(map);
+
+                      // 생성된 마커를 배열에 추가합니다
+                      markers.push(marker);
+                    }
+                    function setMarkers(map) {
+                      for (var i = 0; i < markers.length; i++) {
+                        markers[i].setMap(map);
+                      }
+                    }
+                  </script>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col">
+              <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                  <h4 class="my-0 fw-normal">최근 난폭운전 기록</h4>
+                </div>
+                <div class="card-body">
+                  <li id="first"></li>
+                  <li id="second"></li>
+                  <li id="third"></li>
+                  <li id="fourth"></li>
+                  <li id="fifth"></li>
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
       </main>
