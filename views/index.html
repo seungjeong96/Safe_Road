@@ -105,11 +105,31 @@
                     document.getElementById(axisY).innerHTML = parsedGyroData.Y;
                     document.getElementById(axisZ).innerHTML = parsedGyroData.Z;
                   }
+
+                  socket.on("danger_flag", (flag) => {
+                    //난폭운전 감지여부 그림으로 표시
+                    if (flag <= 1) {
+                      document.getElementById("driveEmoticon").src =
+                        "./images/car.png";
+                    } else {
+                      document.getElementById("driveEmoticon").src =
+                        "./images/skull.png";
+                      document.getElementById("dangerstate").innerHTML =
+                        "난폭운전이 감지되었습니다.";
+                    }
+                  });
                 </script>
 
                 <h3 class="card-title pricing-card-title" id="axisX">0°</h3>
                 <h3 class="card-title pricing-card-title" id="axisY">234°</h3>
                 <h3 class="card-title pricing-card-title" id="axisZ">138°</h3>
+                <img
+                  src="images/car.png"
+                  id="driveEmoticon"
+                  class="card-img-top"
+                  alt="Fail to load image"
+                />
+                <p id="dangerstate">난폭운전여부</p>
                 <ul class="list-unstyled mt-3 mb-4"></ul>
               </div>
             </div>

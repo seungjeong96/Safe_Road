@@ -40,6 +40,9 @@ app.use(express.static("views"));
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
+//가속도 저장 배열50개?
+gyrolist = [];
+
 function readGyro(data) {
   //const a = "-1.00,-1.00,-1.00";
   //const b = "1.00,-1.00,1.00";
@@ -58,10 +61,33 @@ function readGyro(data) {
     };
     const stringJson = JSON.stringify(GyroData);
     webpage.emit("accData", stringJson);
+
+    // 가속도 배열 50개 다 차면 감독 함수 호출함.
     //console.log(axisX, axisY, axisZ);
+
+    var parsedGyroData = JSON.parse(gyroData);
+
+    if (gyrolist.length < 50) {
+      gyrolist.push(parsedGyroData.Y);
+    } else {
+      DetectDanger(gyrolist);
+      gyrolist.length = 0;
+    }
 
     //fs.writeFileSync("./views/GyroData.json", stringJson);
   }
+}
+
+function DetectDanger(gyrolist) {
+  let flag = 0;
+  for (let i = 0; i < gyrolist.length; i++) {
+    if (gyrolist[i] < -16) {
+      flag += 1;
+    }
+  }
+
+  console.log(flag);
+  webpage.emit("danger_flag", flag);
 }
 
 parser.on("data", readGyro);
