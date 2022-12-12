@@ -42,7 +42,8 @@ app.engine("html", require("ejs").renderFile);
 
 //가속도 저장 배열50개?
 gyrolist = [];
-
+var fiftyFlag;
+parser.on("data", readGyro);
 function readGyro(data) {
   //const a = "-1.00,-1.00,-1.00";
   //const b = "1.00,-1.00,1.00";
@@ -62,20 +63,20 @@ function readGyro(data) {
     const stringJson = JSON.stringify(GyroData);
     webpage.emit("accData", stringJson);
 
-    // 가속도 배열 50개 다 차면 감독 함수 호출함.
-    //console.log(axisX, axisY, axisZ);
-
-    var parsedGyroData = JSON.parse(gyroData);
-
     if (gyrolist.length < 50) {
-      gyrolist.push(parsedGyroData.Y);
+      gyrolist.push(axisY);
+      console.log(axisY);
     } else {
       DetectDanger(gyrolist);
       gyrolist.length = 0;
     }
+    // 가속도 배열 50개 다 차면 감독 함수 호출함.
+    //console.log(axisX, axisY, axisZ);
 
-    //fs.writeFileSync("./views/GyroData.json", stringJson);
+    // var parsedGyroData = JSON.parse(GyroData);
   }
+
+  //fs.writeFileSync("./views/GyroData.json", stringJson);
 }
 
 function DetectDanger(gyrolist) {
@@ -85,12 +86,10 @@ function DetectDanger(gyrolist) {
       flag += 1;
     }
   }
-
+  console.log("FLAG : ");
   console.log(flag);
   webpage.emit("danger_flag", flag);
 }
-
-parser.on("data", readGyro);
 
 // html 파일 렌더링
 app.get("/", (req, res) => {
