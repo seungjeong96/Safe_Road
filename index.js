@@ -82,7 +82,8 @@ function readGyro(data) {
 function DetectDanger(gyrolist) {
   let flag = 0;
   for (let i = 0; i < gyrolist.length; i++) {
-    if (gyrolist[i] < -16) {
+    if (gyrolist[i] > 30) {
+      //acc: 16, break: 30
       flag += 1;
     }
   }

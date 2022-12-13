@@ -87,326 +87,330 @@
       </header>
 
       <main>
-        <!-- <div class="row row-cols-2 row-cols-md-3 mb-3 text-center"> -->
-        <div class="row">
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-              <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">난폭운전 여부</h4>
-              </div>
-              <div class="card-body">
-                <script>
-                  const socket = io("http://localhost:3000/webpage");
-                  socket.on("accData", (gyroData) => {
-                    gyroDataPrinter(gyroData);
-                  });
-                  function gyroDataPrinter(gyroData) {
-                    var parsedGyroData = JSON.parse(gyroData);
-                    document.getElementById(axisXdata).innerHTML = axisX;
-                    document.getElementById(axisYdata).innerHTML = axisY;
-                    document.getElementById(axisZdata).innerHTML = axisZ;
-                  }
-
-                  socket.on("danger_flag", (driveFlag) => {
-                    //난폭운전 감지여부 그림으로 표시
-                    flagChecker(driveFlag);
-                  });
-
-                  function flagChecker(flag) {
-                    console.log(
-                      "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@HTML flag"
-                    );
-                    console.log(flag);
-                    if (flag == 0) {
-                      document.getElementById("driveEmoticon").src =
-                        "./images/car.png";
+        <div class="text-center mb-4">
+          <div class="row">
+            <div class="col">
+              <div class="card mb-4 h-100 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                  <h4 class="my-0 fw-normal">난폭운전 여부</h4>
+                </div>
+                <div class="card-body">
+                  <script>
+                    const socket = io("http://localhost:3000/webpage");
+                    socket.on("accData", (gyroData) => {
+                      gyroDataPrinter(gyroData);
+                    });
+                    function gyroDataPrinter(gyroData) {
+                      var parsedGyroData = JSON.parse(gyroData);
+                      document.getElementById(axisXdata).innerHTML = axisX;
+                      document.getElementById(axisYdata).innerHTML = axisY;
+                      document.getElementById(axisZdata).innerHTML = axisZ;
                     }
-                    if (flag > 1) {
-                      document.getElementById("driveEmoticon").src =
-                        "./images/skull.png";
-                      document.getElementById("dangerstate").innerHTML =
-                        "난폭운전이 감지되었습니다.";
-                    }
-                  }
-                </script>
 
-                <h3 class="card-title pricing-card-title" id="axisXdata">0°</h3>
+                    socket.on("danger_flag", (driveFlag) => {
+                      //난폭운전 감지여부 그림으로 표시
+                      flagChecker(driveFlag);
+                    });
+
+                    function flagChecker(flag) {
+                      console.log(
+                        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@HTML flag"
+                      );
+                      console.log(flag);
+                      if (flag == 0) {
+                        document.getElementById("driveEmoticon").src =
+                          "./images/car.png";
+                        document.getElementById("dangerstate").innerHTML =
+                          "안전 운전 중입니다 :)";
+                      }
+                      if (flag > 1) {
+                        document.getElementById("driveEmoticon").src =
+                          "./images/skull.png";
+                        document.getElementById("dangerstate").innerHTML =
+                          "난폭운전이 감지되었습니다.";
+                      }
+                    }
+                  </script>
+
+                  <!-- <h3 class="card-title pricing-card-title" id="axisXdata">0°</h3>
                 <h3 class="card-title pricing-card-title" id="axisYdata">
                   234°
                 </h3>
                 <h3 class="card-title pricing-card-title" id="axisZdata">
                   138°
-                </h3>
+                </h3> -->
+                  <img
+                    src="images/car.png"
+                    id="driveEmoticon"
+                    class="card-img-top"
+                    alt="Fail to load image"
+                  />
+                  <h5 id="dangerstate"></h5>
+                  <ul class="list-unstyled mt-3 mb-4"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card mb-4 h-100 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                  <h4 class="my-0 fw-normal">스트레스 상태</h4>
+                </div>
+                <script language="javascript">
+                  const audioPlay = new Audio();
+                  audioPlay.src = "./audio/classic.mp3";
+
+                  //스트레스 레벨에 따라 이모티콘 변화
+
+                  //const socket = io("http://localhost:3000/webpage");
+                  console.log("웹페이지 웹소켓 연결됨");
+                  socket.on("stress_level", (stress) => {
+                    stressStatus(stress, swearingData);
+                  });
+
+                  function stressStatus(stressLevel, swearingData) {
+                    if (stressLevel == 1 || swearingData == 1) {
+                      document.getElementById("faceEmoticon").src =
+                        "./images/frowning.png";
+                      document.getElementById("statusTextfirst").innerHTML =
+                        "스트레스 지수가 높습니다.";
+                      document.getElementById("statusTextsecond").innerHTML =
+                        "스트레스 완화를 위한 음악을 재생합니다.";
+                      audioPlay.play();
+                    }
+                    if (stressLevel == 0 && swearingData == 0) {
+                      faceEmoticon.src = "./images/smile.png";
+                      document.getElementById("statusText").innerHTML =
+                        "스트레스 지수가 정상입니다!";
+                      audioPlay.pause();
+                    }
+                  }
+                </script>
+
                 <img
-                  src="images/car.png"
-                  id="driveEmoticon"
+                  src="images/nodata.png"
+                  id="faceEmoticon"
                   class="card-img-top"
                   alt="Fail to load image"
                 />
-                <p id="dangerstate">난폭운전여부</p>
-                <ul class="list-unstyled mt-3 mb-4"></ul>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-              <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">스트레스 상태</h4>
-              </div>
-              <script language="javascript">
-                const audioPlay = new Audio();
-                audioPlay.src = "./audio/classic.mp3";
 
-                //스트레스 레벨에 따라 이모티콘 변화
-
-                //const socket = io("http://localhost:3000/webpage");
-                console.log("웹페이지 웹소켓 연결됨");
-                socket.on("stress_level", (stress) => {
-                  stressStatus(stress, swearingData);
-                });
-
-                function stressStatus(stressLevel, swearingData) {
-                  if (stressLevel == 1 || swearingData == 1) {
-                    document.getElementById("faceEmoticon").src =
-                      "./images/frowning.png";
-                    document.getElementById("statusTextfirst").innerHTML =
-                      "스트레스 지수가 높습니다.";
-                    document.getElementById("statusTextsecond").innerHTML =
-                      "스트레스 완화를 위한 음악을 재생합니다.";
-                    audioPlay.play();
-                  }
-                  if (stressLevel == 0 && swearingData == 0) {
-                    faceEmoticon.src = "./images/smile.png";
-                    document.getElementById("statusText").innerHTML =
-                      "스트레스 지수가 정상입니다!";
-                    audioPlay.pause();
-                  }
-                }
-              </script>
-
-              <img
-                src="images/nodata.png"
-                id="faceEmoticon"
-                class="card-img-top"
-                alt="Fail to load image"
-              />
-
-              <p id="statusTextfirst"></p>
-              <p id="statusTextsecond"></p>
-              <!-- <button
+                <p id="statusTextfirst"></p>
+                <p id="statusTextsecond"></p>
+                <!-- <button
                 type="button"
                 onclick="stressStatus(60,0)"
                 class="w-100 btn btn-lg btn-primary"
               >
                 Start
               </button> -->
-              <div class="card-body"></div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm border-primary">
-              <div class="card-header py-3 text-bg-primary border-primary">
-                <h4 class="my-0 fw-normal">음성 데이터 분석</h4>
-              </div>
-              <div class="card-body">
-                <h1 class="card-title pricing-card-title"></h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <div id="label-container"></div>
-                  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-                  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
-                  <p id="currentDisplay"></p>
-                  <p id="swearCountDisplay"></p>
-                  <p id="swearAlertDisplay"></p>
-
-                  <script type="text/javascript">
-                    // more documentation available at
-                    // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
-
-                    // the link to your model provided by Teachable Machine export panel
-                    const URL =
-                      "https://teachablemachine.withgoogle.com/models/s5qwN9lB_/";
-
-                    let status = "Background Noise";
-                    let currentDetection =
-                      document.getElementById("currentDisplay");
-                    let swearCountDisplay =
-                      document.getElementById("swearCountDisplay");
-                    let swearAlertDisplay =
-                      document.getElementById("swearAlertDisplay");
-
-                    //-------------------------------DONT EDIT BELOW---------------------
-                    async function createModel() {
-                      const checkpointURL = URL + "model.json"; // model topology
-                      const metadataURL = URL + "metadata.json"; // model metadata
-
-                      const recognizer = speechCommands.create(
-                        "BROWSER_FFT", // fourier transform type, not useful to change
-                        undefined, // speech commands vocabulary feature, not useful for your models
-                        checkpointURL,
-                        metadataURL
-                      );
-
-                      // check that model and metadata are loaded via HTTPS requests.
-                      await recognizer.ensureModelLoaded();
-
-                      return recognizer;
-                    }
-                    //-----------------------------------------------------------------------
-                    async function init() {
-                      const recognizer = await createModel();
-                      const classLabels = recognizer.wordLabels(); // get class labels
-                      const labelContainer =
-                        document.getElementById("label-container");
-
-                      var swearCount = 0;
-                      var nonSwearCount = 0;
-                      var swearCountArray = new Array(0, 0);
-                      var angryLevel = 0;
-
-                      for (let i = 0; i < classLabels.length; i++) {
-                        labelContainer.appendChild(
-                          document.createElement("div")
-                        );
-                      }
-                      // listen() takes two arguments:
-                      // 1. A callback function that is invoked anytime a word is recognized.
-                      // 2. A configuration object with adjustable fields
-                      setInterval(function () {
-                        swearcount = 0;
-                        swearCountArray[0] = 0;
-                        swearCountArray[1] = 0;
-                        stressStatus(stress, swearCountArray[0]);
-                      }, 100000);
-                      recognizer.listen(
-                        (result) => {
-                          const scores = result.scores; // probability of prediction for each class
-                          // render the probability scores per class
-                          for (let i = 0; i < classLabels.length; i++) {
-                            const classPrediction =
-                              classLabels[i] +
-                              ": " +
-                              result.scores[i].toFixed(2);
-                            // labelContainer.childNodes[i].innerHTML = classPrediction;
-                          }
-
-                          for (let i = 0; i < 9; i++) {
-                            if (result.scores[i] >= 0.8) {
-                              status = classLabels[i]; //(0:개새끼 1:미친 2,3,4: 배경소음 5:씨발 6:씨발(장난) 7:욕설 8:탄식 및 한숨
-                              if (i == 0 || i == 1 || i == 5 || i == 8) {
-                                swearCountArray[0]++;
-                              } else swearCountArray[1]++;
-                            }
-                          }
-
-                          currentDetection.innerHTML =
-                            "현재 인식 단어: " + status;
-                          swearCountDisplay.innerHTML =
-                            "욕설" +
-                            swearCountArray[0] +
-                            "회" +
-                            "  욕설 아님" +
-                            swearCountArray[1] +
-                            "회";
-                          if (swearCountArray[0] > 2) {
-                            swearAlertDisplay.innerHTML =
-                              " 스트레스가 감지되었습니다 ";
-                            stressStatus(1, swearCountArray[0]);
-                          } else {
-                            swearAlertDisplay.innerHTML =
-                              " 오늘도 안전 운전 하세요 :) ";
-                          }
-                        },
-                        {
-                          includeSpectrogram: true, // in case listen should return result.spectrogram
-                          probabilityThreshold: 0.75,
-                          invokeCallbackOnNoiseAndUnknown: true,
-                          overlapFactor: 0.5, // probably want between 0.5 and 0.75. More info in README
-                        }
-                      );
-
-                      // Stop the recognition in 5 seconds.
-                      // setTimeout(() => recognizer.stopListening(), 5000);
-                    }
-                  </script>
-                </ul>
-                <button
-                  type="button"
-                  onclick="init()"
-                  class="w-100 btn btn-lg btn-primary"
-                >
-                  Start
-                </button>
+                <div class="card-body"></div>
               </div>
             </div>
-          </div>
-          <div class="row text-center">
+
             <div class="col">
-              <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                  <h4 class="my-0 fw-normal">난폭운전 지도</h4>
+              <div class="card mb-4 h-100 rounded-3 shadow-sm border-primary">
+                <div class="card-header py-3 text-bg-primary border-primary">
+                  <h4 class="my-0 fw-normal">음성 데이터 분석</h4>
                 </div>
                 <div class="card-body">
-                  <div
-                    id="map"
-                    style="width: 500px; height: 400px; margin: auto"
-                  ></div>
-                  <script
-                    type="text/javascript"
-                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16ef513d6367a6f1eedaef24828af8b0"
-                  ></script>
-                  <script
-                    type="text/javascript"
-                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=clusterer,services"
-                  ></script>
-                  <script>
-                    var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
-                    var options = {
-                      //지도를 생성할 때 필요한 기본 옵션
-                      center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-                      level: 3, //지도의 레벨(확대, 축소 정도)
-                    };
+                  <h1 class="card-title pricing-card-title"></h1>
+                  <ul class="list-unstyled mt-3 mb-4">
+                    <button
+                      type="button"
+                      onclick="init()"
+                      class="w-100 btn btn-lg btn-primary"
+                    >
+                      Start
+                    </button>
+                    <div>&nbsp;</div>
+                    <div id="label-container"></div>
+                    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+                    <h5 id="currentDisplay"></h5>
+                    <h5 id="swearCountDisplay"></h5>
+                    <h5 id="swearAlertDisplay"></h5>
 
-                    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+                    <script type="text/javascript">
+                      // more documentation available at
+                      // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
 
-                    //  마커를 추가하도록 지도에 이벤트를 등록합니다
+                      // the link to your model provided by Teachable Machine export panel
+                      const URL =
+                        "https://teachablemachine.withgoogle.com/models/s5qwN9lB_/";
 
-                    socket.on("GPSData", (gpsData) => {
-                      //gpsData : JSON?
-                      addMarker(
-                        new kakao.maps.LatLng(gpsData.lat, gpsData.lng)
-                      );
-                    });
+                      let status = "Background Noise";
+                      let currentDetection =
+                        document.getElementById("currentDisplay");
+                      let swearCountDisplay =
+                        document.getElementById("swearCountDisplay");
+                      let swearAlertDisplay =
+                        document.getElementById("swearAlertDisplay");
 
-                    // 지도에 표시된 마커 객체를 가지고 있을 배열입니다
-                    var markers = [];
+                      //-------------------------------DONT EDIT BELOW---------------------
+                      async function createModel() {
+                        const checkpointURL = URL + "model.json"; // model topology
+                        const metadataURL = URL + "metadata.json"; // model metadata
 
-                    // 마커 하나를 지도위에 표시합니다
-                    addMarker(new kakao.maps.LatLng(33.450701, 126.570667));
+                        const recognizer = speechCommands.create(
+                          "BROWSER_FFT", // fourier transform type, not useful to change
+                          undefined, // speech commands vocabulary feature, not useful for your models
+                          checkpointURL,
+                          metadataURL
+                        );
 
-                    // 마커를 생성하고 지도위에 표시하는 함수입니다
-                    function addMarker(position) {
-                      // 마커를 생성합니다
-                      var marker = new kakao.maps.Marker({
-                        position: position,
-                      });
+                        // check that model and metadata are loaded via HTTPS requests.
+                        await recognizer.ensureModelLoaded();
 
-                      // 마커가 지도 위에 표시되도록 설정합니다
-                      marker.setMap(map);
-
-                      // 생성된 마커를 배열에 추가합니다
-                      markers.push(marker);
-                    }
-                    function setMarkers(map) {
-                      for (var i = 0; i < markers.length; i++) {
-                        markers[i].setMap(map);
+                        return recognizer;
                       }
-                    }
-                  </script>
+                      //-----------------------------------------------------------------------
+                      async function init() {
+                        const recognizer = await createModel();
+                        const classLabels = recognizer.wordLabels(); // get class labels
+                        const labelContainer =
+                          document.getElementById("label-container");
+
+                        var swearCount = 0;
+                        var nonSwearCount = 0;
+                        var swearCountArray = new Array(0, 0);
+                        var angryLevel = 0;
+
+                        for (let i = 0; i < classLabels.length; i++) {
+                          labelContainer.appendChild(
+                            document.createElement("div")
+                          );
+                        }
+                        // listen() takes two arguments:
+                        // 1. A callback function that is invoked anytime a word is recognized.
+                        // 2. A configuration object with adjustable fields
+                        setInterval(function () {
+                          swearcount = 0;
+                          swearCountArray[0] = 0;
+                          swearCountArray[1] = 0;
+                          stressStatus(stress, swearCountArray[0]);
+                        }, 100000);
+                        recognizer.listen(
+                          (result) => {
+                            const scores = result.scores; // probability of prediction for each class
+                            // render the probability scores per class
+                            for (let i = 0; i < classLabels.length; i++) {
+                              const classPrediction =
+                                classLabels[i] +
+                                ": " +
+                                result.scores[i].toFixed(2);
+                              // labelContainer.childNodes[i].innerHTML = classPrediction;
+                            }
+
+                            for (let i = 0; i < 9; i++) {
+                              if (result.scores[i] >= 0.8) {
+                                status = classLabels[i]; //(0:개새끼 1:미친 2,3,4: 배경소음 5:씨발 6:씨발(장난) 7:욕설 8:탄식 및 한숨
+                                if (i == 0 || i == 1 || i == 5 || i == 8) {
+                                  swearCountArray[0]++;
+                                } else swearCountArray[1]++;
+                              }
+                            }
+
+                            currentDetection.innerHTML =
+                              "현재 인식 단어: " + status;
+                            swearCountDisplay.innerHTML =
+                              "욕설" +
+                              swearCountArray[0] +
+                              "회" +
+                              "  욕설 아님" +
+                              swearCountArray[1] +
+                              "회";
+                            if (swearCountArray[0] > 2) {
+                              swearAlertDisplay.innerHTML =
+                                " 스트레스가 감지되었습니다 ";
+                              stressStatus(1, swearCountArray[0]);
+                            } else {
+                              swearAlertDisplay.innerHTML =
+                                " 오늘도 안전 운전 하세요 :) ";
+                            }
+                          },
+                          {
+                            includeSpectrogram: true, // in case listen should return result.spectrogram
+                            probabilityThreshold: 0.75,
+                            invokeCallbackOnNoiseAndUnknown: true,
+                            overlapFactor: 0.5, // probably want between 0.5 and 0.75. More info in README
+                          }
+                        );
+
+                        // Stop the recognition in 5 seconds.
+                        // setTimeout(() => recognizer.stopListening(), 5000);
+                      }
+                    </script>
+                  </ul>
                 </div>
               </div>
             </div>
-            <!-- <div class="col">
+            <div>&nbsp;</div>
+            <div class="row text-center">
+              <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                  <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">난폭운전 지도</h4>
+                  </div>
+                  <div class="card-body">
+                    <div
+                      id="map"
+                      style="width: 500px; height: 400px; margin: auto"
+                    ></div>
+                    <script
+                      type="text/javascript"
+                      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=16ef513d6367a6f1eedaef24828af8b0"
+                    ></script>
+                    <script
+                      type="text/javascript"
+                      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=clusterer,services"
+                    ></script>
+                    <script>
+                      var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+                      var options = {
+                        //지도를 생성할 때 필요한 기본 옵션
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+                        level: 3, //지도의 레벨(확대, 축소 정도)
+                      };
+
+                      var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+                      //  마커를 추가하도록 지도에 이벤트를 등록합니다
+
+                      socket.on("GPSData", (gpsData) => {
+                        //gpsData : JSON?
+                        addMarker(
+                          new kakao.maps.LatLng(gpsData.lat, gpsData.lng)
+                        );
+                      });
+
+                      // 지도에 표시된 마커 객체를 가지고 있을 배열입니다
+                      var markers = [];
+
+                      // 마커 하나를 지도위에 표시합니다
+                      addMarker(new kakao.maps.LatLng(33.450701, 126.570667));
+
+                      // 마커를 생성하고 지도위에 표시하는 함수입니다
+                      function addMarker(position) {
+                        // 마커를 생성합니다
+                        var marker = new kakao.maps.Marker({
+                          position: position,
+                        });
+
+                        // 마커가 지도 위에 표시되도록 설정합니다
+                        marker.setMap(map);
+
+                        // 생성된 마커를 배열에 추가합니다
+                        markers.push(marker);
+                      }
+                      function setMarkers(map) {
+                        for (var i = 0; i < markers.length; i++) {
+                          markers[i].setMap(map);
+                        }
+                      }
+                    </script>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col">
               <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                   <h4 class="my-0 fw-normal">최근 난폭운전 기록</h4>
@@ -420,6 +424,7 @@
                 </div>
               </div>
             </div> -->
+            </div>
           </div>
         </div>
       </main>
