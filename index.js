@@ -97,7 +97,7 @@ function DetectDanger(gyrolist) {
     let today = new Date();
     let timeData =
       today.toLocaleDateString() +
-      ":" +
+      " " +
       today.getHours() +
       ":" +
       today.getMinutes() +
@@ -106,11 +106,7 @@ function DetectDanger(gyrolist) {
 
     recklessDrivingRecords[timeData] = flag;
     let stringDrivingData = JSON.stringify(recklessDrivingRecords);
-    fs.writeFileSync(
-      "./recklessDrivingData/records.json",
-      stringDrivingData,
-      "utf-8"
-    );
+    fs.writeFileSync("./records.json", stringDrivingData, "utf-8");
   }
 
   webpage.emit("danger_flag", flag);
