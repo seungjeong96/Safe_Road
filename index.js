@@ -40,6 +40,9 @@ app.use(express.static("views"));
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
+//난폭운전 데이터 저장 공간
+recklessDrivingRecords = {};
+
 //가속도 저장 배열50개?
 gyrolist = [];
 var fiftyFlag;
@@ -87,8 +90,29 @@ function DetectDanger(gyrolist) {
       flag += 1;
     }
   }
+
   console.log("FLAG : ");
   console.log(flag);
+  if (flag > 1) {
+    let today = new Date();
+    let timeData =
+      today.toLocaleDateString() +
+      ":" +
+      today.getHours() +
+      ":" +
+      today.getMinutes() +
+      ":" +
+      today.getSeconds();
+
+    recklessDrivingRecords[timeData] = flag;
+    let stringDrivingData = JSON.stringify(recklessDrivingRecords);
+    fs.writeFileSync(
+      "./recklessDrivingData/records.json",
+      stringDrivingData,
+      "utf-8"
+    );
+  }
+
   webpage.emit("danger_flag", flag);
 }
 
